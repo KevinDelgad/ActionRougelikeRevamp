@@ -2,6 +2,7 @@
 #include "SCharacter.h"
 #include "ActionRougelikeRe/Public/SCharacter.h"
 #include "DrawDebugHelpers.h"
+#include "SInteractionComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -19,6 +20,8 @@ ASCharacter::ASCharacter()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
 	CameraComp->SetupAttachment(SpringArm);
 
+	InteractionComp = CreateDefaultSubobject<USInteractionComponent>("InteractionComp");
+	
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	
 	bUseControllerRotationYaw = false;
@@ -55,6 +58,21 @@ void ASCharacter::MoveRight(float Value)
 	AddMovementInput(RightVector, Value);
 }
 
+void ASCharacter::PrimaryAttack_TimeElapsed()
+{
+	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	
+	//Rotation and Position of Projectile Spawn
+	FTransform SpawnTM = FTransform(GetControlRotation(),HandLocation);
+	
+	FActorSpawnParameters SpawnParams;
+	
+	// Ensures Object does not move/cancel spawn to avoid overlapping when spawns
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	
+	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
+}
+
 // Called every frame
 void ASCharacter::Tick(float DeltaTime)
 {
@@ -81,17 +99,17 @@ void ASCharacter::Tick(float DeltaTime)
 
 void ASCharacter::PrimaryAttack()
 {
-	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-	
-	//Rotation and Position of Projectile Spawn
-	FTransform SpawnTM = FTransform(GetControlRotation(),HandLocation);
-	
-	FActorSpawnParameters SpawnParams;
-	
-	// Ensures Object does not move/cancel spawn to avoid overlapping when spawns
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	
-	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
+	PlayAnimMontage(AttackAnim);
+
+	GetWorldTimerManager().SetTimer(TimerHanlde_PrimaryAttack, this, &ASCharacter::PrimaryAttack_TimeElapsed, 0.2f);
+}
+
+void ASCharacter::PrimaryInteract()
+{
+	if (InteractionComp)
+	{
+		InteractionComp->PrimaryInteract();
+	}
 }
 
 // Called to bind functionality to input
@@ -106,8 +124,9 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ASCharacter::PrimaryAttack);
+
+	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &ASCharacter::PrimaryInteract);
 	
 }
 

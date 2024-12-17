@@ -6,10 +6,11 @@
 #include "GameFramework/Character.h"
 #include "SCharacter.generated.h"
 
+class USInteractionComponent;
 //Forward Declaration
 class USpringArmComponent;
 class UCameraComponent;
-
+class UAnimMontage;
 UCLASS()
 class ACTIONROUGELIKERE_API ASCharacter : public ACharacter
 {
@@ -27,14 +28,25 @@ protected:
 	USpringArmComponent* SpringArm;
 
 	//Allows assigning of a Class
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Attack")
 	TSubclassOf<AActor> ProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	UAnimMontage* AttackAnim;
+
+	UPROPERTY(VisibleAnywhere)
+	USInteractionComponent* InteractionComp;
+	
+	FTimerHandle TimerHanlde_PrimaryAttack;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
 	void MoveForward(float Value);
 	void MoveRight(float Value);
+	void PrimaryAttack_TimeElapsed();
 	void PrimaryAttack();
+	void PrimaryInteract();
 	
 public:	
 	// Called every frame
