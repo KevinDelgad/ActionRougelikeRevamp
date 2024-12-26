@@ -69,7 +69,7 @@ void ASCharacter::PrimaryAttack_TimeElapsed()
 	
 	// Ensures Object does not move/cancel spawn to avoid overlapping when spawns
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	
+	SpawnParams.Instigator = this;
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
 }
 

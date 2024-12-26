@@ -22,11 +22,16 @@ ASExplosiveBarrel::ASExplosiveBarrel()
 	RadialForce->bImpulseVelChange = true;
 }
 
-void ASExplosiveBarrel::Explode(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	FVector NormalImpulse, const FHitResult& Hit)
+void ASExplosiveBarrel::Explode()
+{
+	RadialForce->FireImpulse();
+}
+
+void ASExplosiveBarrel::BarrelHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+                                  FVector NormalImpulse, const FHitResult& Hit)
 {
 	UE_LOG(LogTemp, Warning, TEXT("BarrelTouched!")); 
-	RadialForce->FireImpulse();
+	Explode();
 }
 
 // Called when the game starts or when spawned
@@ -34,7 +39,7 @@ void ASExplosiveBarrel::BeginPlay()
 {
 	Super::BeginPlay();
 
-	StaticMesh->OnComponentHit.AddDynamic(this, &ASExplosiveBarrel::Explode);
+	StaticMesh->OnComponentHit.AddDynamic(this, &ASExplosiveBarrel::BarrelHit);
 }
 
 // Called every frame

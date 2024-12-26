@@ -18,9 +18,15 @@ public:
 	// Sets default values for this actor's properties
 	ASExplosiveBarrel();
 
+
 protected:
-	UFUNCTION()
-	void Explode(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	UFUNCTION(BlueprintCallable)
+	void Explode();
+
+	UFUNCTION(BlueprintCallable)
+	void BarrelHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+				   FVector NormalImpulse, const FHitResult& Hit);
+	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
