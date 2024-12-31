@@ -32,13 +32,20 @@ protected:
 	TSubclassOf<AActor> ProjectileClass;
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
+	TSubclassOf<AActor> BlackHole;
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	TSubclassOf<AActor> Dash;
+	
+	UPROPERTY(EditAnywhere, Category = "Attack")
 	UAnimMontage* AttackAnim;
 
 	UPROPERTY(VisibleAnywhere)
 	USInteractionComponent* InteractionComp;
 	
-	FTimerHandle TimerHanlde_PrimaryAttack;
-
+	FTimerHandle TimerHandle_PrimaryAttack;
+	FTimerHandle TimerHandle_PrimaryAbility;
+	FTimerHandle TimerHandle_SecondaryAbility;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
@@ -46,11 +53,17 @@ protected:
 	void MoveRight(float Value);
 	void PrimaryAttack_TimeElapsed();
 	void PrimaryAttack();
+	void PrimaryAbility_TimeElapsed();
+	void PrimaryAbility();
+	void SecondaryAbility_TimeElapsed();
+	void SecondaryAbility();
 	void PrimaryInteract();
-	
+	FRotator GetProjectileRotationToCrosshair(FVector SpawnLocation);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	void AbiltyAnim(FTimerHandle TimerHandle, TDelegate<void()>::TMethodPtr<ASCharacter> Func);
 
 
 	// Called to bind functionality to input
