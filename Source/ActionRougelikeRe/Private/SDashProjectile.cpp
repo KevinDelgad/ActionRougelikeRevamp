@@ -43,7 +43,6 @@ void ASDashProjectile::BeginPlay()
 	Super::BeginPlay();
 
 	GetWorldTimerManager().SetTimer(AliveTimer, this, &ASDashProjectile::TeleportAnim, 0.2f);
-	SphereComp->IgnoreActorWhenMoving(this->GetInstigator(), true);
 }
 
 void ASDashProjectile::PostInitializeComponents()

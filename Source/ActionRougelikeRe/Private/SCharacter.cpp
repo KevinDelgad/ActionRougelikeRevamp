@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "SCharacter.h"
 #include "DrawDebugHelpers.h"
+#include "SAttributeComponent.h"
 #include "SInteractionComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -25,6 +26,8 @@ ASCharacter::ASCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	
 	bUseControllerRotationYaw = false;
+
+	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
 }
 
 FRotator ASCharacter::GetProjectileRotationToCrosshair(FVector SpawnLocation)
@@ -39,11 +42,7 @@ FRotator ASCharacter::GetProjectileRotationToCrosshair(FVector SpawnLocation)
 	FVector End = CameraViewPoint + (CameraComp->GetForwardVector() * 5000);
 	FHitResult Hit;
 	bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Hit, CameraViewPoint, End, ObjectQueryParams);
-
-	if (bBlockingHit)
-	{
-		UE_LOG(LogTemp, Log, TEXT("%s was hit!"), *GetNameSafe(Hit.GetActor()));
-	}
+	
 	
 	FVector EndPoint = bBlockingHit ? Hit.ImpactPoint : End ;
 	FRotator EndRotation = UKismetMathLibrary::FindLookAtRotation(SpawnLocation, EndPoint);

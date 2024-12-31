@@ -11,6 +11,7 @@ class USInteractionComponent;
 class USpringArmComponent;
 class UCameraComponent;
 class UAnimMontage;
+class USAttributeComponent;
 UCLASS()
 class ACTIONROUGELIKERE_API ASCharacter : public ACharacter
 {
@@ -42,6 +43,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	USInteractionComponent* InteractionComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	USAttributeComponent* AttributeComp;
 	
 	FTimerHandle TimerHandle_PrimaryAttack;
 	FTimerHandle TimerHandle_PrimaryAbility;
