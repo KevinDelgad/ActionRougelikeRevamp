@@ -74,7 +74,7 @@ void USInteractionComponent::PrimaryInteract()
 			//U is used to check if something implements it as opposed to I
 			if(HitActor->Implements<USGameplayInterface>())
 			{
-				APawn* MyPawn = Cast<APawn>(HitActor);
+				APawn* MyPawn = Cast<APawn>(MyOwner);
 				
 				//Execute the target with the syntax Execute_FunctionName()
 				//First parameter cannot be null as it would crash trying to find function to execute

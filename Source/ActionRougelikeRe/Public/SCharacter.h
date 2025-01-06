@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "SCharacter.generated.h"
 
+class UParticleEmitter;
 class USInteractionComponent;
 //Forward Declaration
 class USpringArmComponent;
@@ -41,17 +42,27 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	UAnimMontage* AttackAnim;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Attack")
+	UParticleSystem* CastingEmitter;
+	
 	UPROPERTY(VisibleAnywhere)
 	USInteractionComponent* InteractionComp;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	USAttributeComponent* AttributeComp;
 	
+	void SpawnProjectile(TSubclassOf<AActor> ClassToSpawn);
+	
 	FTimerHandle TimerHandle_PrimaryAttack;
 	FTimerHandle TimerHandle_PrimaryAbility;
 	FTimerHandle TimerHandle_SecondaryAbility;
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	float AttackAnimDelay;
+
+	UFUNCTION()
+	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
+	virtual void PostInitializeComponents() override;
 	
 	void MoveForward(float Value);
 	void MoveRight(float Value);
@@ -62,7 +73,6 @@ protected:
 	void SecondaryAbility_TimeElapsed();
 	void SecondaryAbility();
 	void PrimaryInteract();
-	FRotator GetProjectileRotationToCrosshair(FVector SpawnLocation);
 
 public:	
 	// Called every frame

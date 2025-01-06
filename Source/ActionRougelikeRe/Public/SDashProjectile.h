@@ -16,20 +16,19 @@ class ACTIONROUGELIKERE_API ASDashProjectile : public ASProjectileBase
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UParticleSystemComponent* ImpactParticle;
+	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
+	float TeleportDelay;
 	
-	FTimerHandle AliveTimer;
-	FTimerHandle TeleportTimer;
+	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
+	float DetonateDelay;
 	
-	void TeleportAnim();
-	void Teleport();
-	UFUNCTION()
-	void ImmediateTeleport(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	FTimerHandle TimerHandle_DelayedDetonate;
+	
+	virtual void Explode_Implementation() override;
+
+	void TeleportInstigator();
 	
 	virtual void BeginPlay() override;
-	
-	virtual void PostInitializeComponents() override;
 	
 public:
 	ASDashProjectile();

@@ -2,52 +2,52 @@
 
 
 #include "SDashProjectile.h"
-
-#include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 
 ASDashProjectile::ASDashProjectile()
 {
-	ImpactParticle = CreateDefaultSubobject<UParticleSystemComponent>("ImpactEmitter");
-	ImpactParticle->SetAutoActivate(false);
-	ImpactParticle->SetupAttachment(RootComponent);
-}
+	TeleportDelay = 0.2f;
+	DetonateDelay = 0.2f;
 
-void ASDashProjectile::TeleportAnim()
-{
-	MovementComp->Velocity = FVector::ZeroVector;
-	ImpactParticle->Activate();
-	
-	GetWorldTimerManager().SetTimer(AliveTimer, this, &ASDashProjectile::Teleport, 0.2f);
+	MovementComp->InitialSpeed = 6000.f;
 }
-
-void ASDashProjectile::Teleport()
-{
-	AActor* ProjectileInstigator = this->GetInstigator();
-	ProjectileInstigator->TeleportTo(this->GetActorLocation(), FRotator(0, 0, 0));
-	
-	this->Destroy();
-}
-
-void ASDashProjectile::ImmediateTeleport(UPrimitiveComponent* HitComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
-	GetWorldTimerManager().ClearTimer(AliveTimer);
-	TeleportAnim();
-}
-
 
 void ASDashProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetWorldTimerManager().SetTimer(AliveTimer, this, &ASDashProjectile::TeleportAnim, 0.2f);
+	GetWorldTimerManager().SetTimer(TimerHandle_DelayedDetonate, this, &ASDashProjectile::Explode, DetonateDelay);
 }
 
-void ASDashProjectile::PostInitializeComponents()
+
+void ASDashProjectile::Explode_Implementation()
 {
-	Super::PostInitializeComponents();
-	SphereComp->OnComponentHit.AddDynamic(this,  &ASDashProjectile::ImmediateTeleport);
+	//We Removed Base Implementation as we want the projectile to persist for a little longer
+	
+	GetWorldTimerManager().ClearTimer(TimerHandle_DelayedDetonate);
+	UGameplayStatics::SpawnEmitterAtLocation(this, ImpactVFX, GetActorLocation(), GetActorRotation());
+	EffectComp->DeactivateSystem();
+
+	MovementComp->StopMovementImmediately();
+
+	//Disable Collison to ensure no accidental additonal onhit/onoverlap events
+	SetActorEnableCollision(false);
+
+	//Made this timer handle local as we have no intention to ever cancel this event
+	FTimerHandle TimerHandle_DelayedTeleport;
+	GetWorldTimerManager().SetTimer(TimerHandle_DelayedTeleport, this, &ASDashProjectile::TeleportInstigator, DetonateDelay);
+}
+
+void ASDashProjectile::TeleportInstigator()
+{
+	AActor* ActorToTeleport = GetInstigator();
+	if (ensure(ActorToTeleport))
+	{
+		//Keep instigator rotation
+		ActorToTeleport->TeleportTo(GetActorLocation(), ActorToTeleport->GetActorRotation(), false, false);
+	}
+	
 }
 

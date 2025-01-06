@@ -34,7 +34,7 @@ void ASBlackholeProjectile::DestroySelf()
 	this->Destroy();
 }
 
-void ASBlackholeProjectile::OnHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+void ASBlackholeProjectile::OnHitHole(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor != this->GetInstigator() && OtherActor != this)
@@ -48,5 +48,5 @@ void ASBlackholeProjectile::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	BlackHole->OnComponentBeginOverlap.AddDynamic(this, &ASBlackholeProjectile::OnHit);
+	BlackHole->OnComponentBeginOverlap.AddDynamic(this, &ASBlackholeProjectile::OnHitHole);
 }

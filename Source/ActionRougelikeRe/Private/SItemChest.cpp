@@ -21,6 +21,7 @@ ASItemChest::ASItemChest()
 void ASItemChest::Interact_Implementation(APawn* InstigatorPawn)
 {
 	//ISGameplayInterface::Interact_Implementation(Instigator);
+	UE_LOG(LogHAL, Log, TEXT("Instigator Pawn: "));
 	LidMesh->SetRelativeRotation(FRotator(TargetPitch, 0, 0));
 }
 

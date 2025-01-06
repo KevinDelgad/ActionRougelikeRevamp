@@ -2,15 +2,21 @@
 #include "ActionRougelikeRe/Public/SMagicProjectile.h"
 
 #include "SAttributeComponent.h"
+#include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
-#include "GameFramework/ProjectileMovementComponent.h"
-#include "Particles/ParticleSystemComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ASMagicProjectile::ASMagicProjectile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	Damage = -20.0f;
+
+	
+	FlightSound = CreateDefaultSubobject<UAudioComponent>("FlightSoundComp");
+	FlightSound->SetupAttachment(RootComponent);
+
 }
 
 // Called when the game starts or when spawned
@@ -29,10 +35,21 @@ void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 		USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
 		if (AttributeComp)
 		{
-			AttributeComp->ApplyHealthChange(-20.0f);
+			AttributeComp->ApplyHealthChange(Damage);
+			UGameplayStatics::PlaySoundAtLocation(this, ImpactSound , GetActorLocation(), GetActorRotation());
 			Destroy();
+			
 		}
 	}
+}
+
+void ASMagicProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,	
+	FVector NormalImpulse, const FHitResult& Hit)
+{
+	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound , GetActorLocation(), GetActorRotation());
+	UGameplayStatics::PlayWorldCameraShake(this, CameraShakeClass, GetActorLocation(), 25000, 25000);
+	Destroy();
+	//Super::OnHit(HitComponent, OtherActor, OtherComp, NormalImpulse, Hit);
 }
 
 void ASMagicProjectile::PostInitializeComponents()

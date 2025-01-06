@@ -6,7 +6,8 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystem.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -28,37 +29,73 @@ ASCharacter::ASCharacter()
 	bUseControllerRotationYaw = false;
 
 	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
+
+	AttackAnimDelay = 2.0f;
+	CastingEmitter = CreateDefaultSubobject<UParticleSystem>("CastingEmitter");
 }
 
-FRotator ASCharacter::GetProjectileRotationToCrosshair(FVector SpawnLocation)
+void ASCharacter::PostInitializeComponents()
 {
-	FCollisionObjectQueryParams ObjectQueryParams;
-	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
-	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
-	ObjectQueryParams.AddObjectTypesToQuery(ECC_PhysicsBody);
-	FVector CameraViewPoint = CameraComp->GetComponentLocation();
-	
-	
-	FVector End = CameraViewPoint + (CameraComp->GetForwardVector() * 5000);
-	FHitResult Hit;
-	bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Hit, CameraViewPoint, End, ObjectQueryParams);
-	
-	
-	FVector EndPoint = bBlockingHit ? Hit.ImpactPoint : End ;
-	FRotator EndRotation = UKismetMathLibrary::FindLookAtRotation(SpawnLocation, EndPoint);
-	FColor LineColor = bBlockingHit ? FColor::Red : FColor::Green;
-	DrawDebugLine(GetWorld(), CameraViewPoint, EndPoint, LineColor, false, 2, 0, 2.0f);
-	return EndRotation;
-	
-	//Projectile->SetActorRotation(EndRotation);
+	Super::PostInitializeComponents();
+
+	AttributeComp->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
 }
 
-// Called when the game starts or when spawned
-void ASCharacter::BeginPlay()
+void ASCharacter::SpawnProjectile(TSubclassOf<AActor> ClassToSpawn)
 {
-	Super::BeginPlay();
-	
+	if (ensureAlways(ClassToSpawn))
+	{
+		FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		SpawnParams.Instigator = this;
+
+		FHitResult Hit;
+		FVector TraceStart = CameraComp->GetComponentLocation();
+		// endpoint far into the look-at distance (not too far, still adjust somewhat towards crosshair on a miss)
+		FVector TraceEnd = CameraComp->GetComponentLocation() + (GetControlRotation().Vector() * 5000);
+		FCollisionShape Shape;
+		Shape.SetSphere(20.0f);
+		// Ignore Player
+		FCollisionQueryParams Params;
+		Params.AddIgnoredActor(this);
+		FCollisionObjectQueryParams ObjParams;
+		ObjParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+		ObjParams.AddObjectTypesToQuery(ECC_WorldStatic);
+		ObjParams.AddObjectTypesToQuery(ECC_Pawn);
+		FRotator ProjRotation;
+		// true if we got to a blocking hit (Alternative: SweepSingleByChannel with ECC_WorldDynamic)
+		if (GetWorld()->SweepSingleByObjectType(Hit, TraceStart, TraceEnd, FQuat::Identity, ObjParams, Shape, Params))
+		{
+			// Adjust location to end up at crosshair look-at
+			ProjRotation = FRotationMatrix::MakeFromX(Hit.ImpactPoint - HandLocation).Rotator();
+		}
+		else
+		{
+			// Fall-back since we failed to find any blocking hit
+			ProjRotation = FRotationMatrix::MakeFromX(TraceEnd - HandLocation).Rotator();
+		}
+		FTransform SpawnTM = FTransform(ProjRotation, HandLocation);
+		GetWorld()->SpawnActor<AActor>(ClassToSpawn, SpawnTM, SpawnParams);
+	}
 }
+
+void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth,
+	float Delta)
+{
+	//When Character takes damage
+	if (Delta < 0.0f)
+	{
+		GetMesh()->SetScalarParameterValueOnMaterials("TimeToHit", GetWorld()->GetTimeSeconds());
+		if (NewHealth <= 0.0f)
+		{
+			APlayerController* PC = Cast<APlayerController>(GetController());
+			DisableInput(PC);
+		}
+	}
+}
+
 
 void ASCharacter::MoveForward(float Value)
 {
@@ -88,21 +125,7 @@ void ASCharacter::PrimaryAttack_TimeElapsed()
 {
 	//ensure Macro functions as a breakpoint for first Fail if returns false
 	//Ensure does not run on shipped builds
-	if (ensure(ProjectileClass))
-	{
-		FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-		//GetProjectileRotationToCrosshair(HandLocation);
-		//Rotation and Position of Projectile Spawn
-		FTransform SpawnTM = FTransform(GetProjectileRotationToCrosshair(HandLocation),HandLocation);
-		
-		FActorSpawnParameters SpawnParams;
-		
-		// Ensures Object does not move/cancel spawn to avoid overlapping when spawns
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		SpawnParams.Instigator = this;
-		
-		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
-	}
+	SpawnProjectile(ProjectileClass);
 }
 
 // Called every frame
@@ -132,7 +155,8 @@ void ASCharacter::Tick(float DeltaTime)
 void ASCharacter::AbiltyAnim(FTimerHandle TimerHandle,  TDelegate<void()>::TMethodPtr<ASCharacter> Func)
 {
 	PlayAnimMontage(AttackAnim);
-
+	
+	UGameplayStatics::SpawnEmitterAttached(CastingEmitter, GetMesh(), "Muzzle_01",FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::SnapToTarget);
 	GetWorldTimerManager().SetTimer(TimerHandle, this, Func, 0.2f);
 }
 
@@ -145,23 +169,7 @@ void ASCharacter::PrimaryAttack()
 
 void ASCharacter::PrimaryAbility_TimeElapsed()
 {
-	//ensureAlways Macro functions as a breakpoint for every Fail if returns false
-	// Not Recommended in Tick Function
-	if (ensureAlways(BlackHole))
-	{
-		FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-		//GetProjectileRotationToCrosshair(HandLocation);
-		//Rotation and Position of Projectile Spawn
-		FTransform SpawnTM = FTransform(GetProjectileRotationToCrosshair(HandLocation),HandLocation);
-		
-		FActorSpawnParameters SpawnParams;
-		
-		// Ensures Object does not move/cancel spawn to avoid overlapping when spawns
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		SpawnParams.Instigator = this;
-		
-		GetWorld()->SpawnActor<AActor>(BlackHole, SpawnTM, SpawnParams);
-	}
+	SpawnProjectile(BlackHole);
 }
 
 void ASCharacter::PrimaryAbility()
@@ -171,18 +179,7 @@ void ASCharacter::PrimaryAbility()
 
 void ASCharacter::SecondaryAbility_TimeElapsed()
 {
-	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-	//GetProjectileRotationToCrosshair(HandLocation);
-	//Rotation and Position of Projectile Spawn
-	FTransform SpawnTM = FTransform(GetProjectileRotationToCrosshair(HandLocation),HandLocation);
-	
-	FActorSpawnParameters SpawnParams;
-	
-	// Ensures Object does not move/cancel spawn to avoid overlapping when spawns
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	SpawnParams.Instigator = this;
-	
-	GetWorld()->SpawnActor<AActor>(Dash, SpawnTM, SpawnParams);
+	SpawnProjectile(Dash);
 }
 
 void ASCharacter::SecondaryAbility()
