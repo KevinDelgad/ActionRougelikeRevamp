@@ -7,15 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="957e930a-7654-49c5-9c04-346a509a5a99" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Content/ActionRougelike/AI/MinionRangedBP.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ActionRougelike/AI/MinionRangedBP.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/ActionRougelike/AI/MinionRangedBT.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ActionRougelike/AI/MinionRangedBT.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/ParagonMinions/Characters/Minions/Down_Minions/Animations/Ranged/Blendspaces/IdleToRun_A_Combat.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ParagonMinions/Characters/Minions/Down_Minions/Animations/Ranged/Blendspaces/IdleToRun_A_Combat.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/ParagonMinions/Characters/Minions/Down_Minions/Meshes/MinionRanged_AnimBP.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ParagonMinions/Characters/Minions/Down_Minions/Meshes/MinionRanged_AnimBP.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ActionRougelikeRe/Private/AI/SAICharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ActionRougelikeRe/Private/AI/SAICharacter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ActionRougelikeRe/Private/AI/SAIController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ActionRougelikeRe/Private/AI/SAIController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ActionRougelikeRe/Public/AI/SAICharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ActionRougelikeRe/Public/AI/SAICharacter.h" afterDir="false" />
-    </list>
+    <list default="true" id="957e930a-7654-49c5-9c04-346a509a5a99" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -133,7 +125,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1736380101731</updated>
-      <workItem from="1736380103592" duration="4661000" />
+      <workItem from="1736380103592" duration="4750000" />
     </task>
     <servers />
   </component>

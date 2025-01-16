@@ -22,7 +22,7 @@ EBTNodeResult::Type USBTTaskNode_HealSelf::ExecuteTask(UBehaviorTreeComponent& O
 	*(AIPawn->GetName())))
 			{
 				float MaxHealth = AttributeComponent->GetMaxHealth();
-				return AttributeComponent->ApplyHealthChange(MaxHealth) ? EBTNodeResult::Succeeded : EBTNodeResult::Failed;
+				return AttributeComponent->ApplyHealthChange(AIPawn,MaxHealth) ? EBTNodeResult::Succeeded : EBTNodeResult::Failed;
 			}
 		}
 	}
