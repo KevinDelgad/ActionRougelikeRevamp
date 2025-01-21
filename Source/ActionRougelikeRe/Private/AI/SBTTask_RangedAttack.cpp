@@ -11,7 +11,7 @@
 USBTTask_RangedAttack::USBTTask_RangedAttack()
 {
 	
-	MaxBulletSpread = -2.0f;
+	MaxBulletSpread = 2.0f;
 }
 
 
@@ -37,7 +37,7 @@ EBTNodeResult::Type USBTTask_RangedAttack::ExecuteTask(UBehaviorTreeComponent& O
 			return EBTNodeResult::Failed;
 		}
 
-		if (USAttributeComponent::IsActorAlive(TargetActor))
+		if (!USAttributeComponent::IsActorAlive(TargetActor))
 		{
 			return EBTNodeResult::Failed;
 		}
@@ -46,7 +46,8 @@ EBTNodeResult::Type USBTTask_RangedAttack::ExecuteTask(UBehaviorTreeComponent& O
 		FVector Direction = TargetActor->GetActorLocation() - MuzzleLocation;
 		FRotator MuzzleRotation = Direction.Rotation();
 
-		MuzzleRotation.Pitch += FMath::RandRange(-MaxBulletSpread, MaxBulletSpread);
+		MuzzleRotation.Pitch += FMath::RandRange(0.0f, MaxBulletSpread);
+		MuzzleRotation.Yaw += FMath::RandRange(-MaxBulletSpread, MaxBulletSpread);
 		
 		FActorSpawnParameters Params;
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;

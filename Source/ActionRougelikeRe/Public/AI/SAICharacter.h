@@ -19,6 +19,9 @@ public:
 	ASAICharacter();
 
 protected:
+
+	UPROPERTY(VisibleAnywhere, Category = "Effect")
+	FName TimeToHitParamName;
 	
 	void SetTargetActor(AActor* NewTarget);
 	
