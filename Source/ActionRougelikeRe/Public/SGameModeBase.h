@@ -40,11 +40,16 @@ class ACTIONROUGELIKERE_API ASGameModeBase : public AGameModeBase
 	UFUNCTION()
 	void SpawnBotTimerElapsed();
 
+	UFUNCTION()
+	void RespawnPlayerElapsed(AController* Controller);
+
 	public:
 	ASGameModeBase();
 	
 	virtual void StartPlay() override;
 
+	virtual void OnActorKilled(AActor* VictimActor, AActor* Killer);
+	
 	UFUNCTION(Exec)
 	void KillAll();
 };

@@ -2,6 +2,7 @@
 #include "ActionRougelikeRe/Public/SMagicProjectile.h"
 
 #include "SAttributeComponent.h"
+#include "SGameplayFunctionLibrary.h"
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -11,7 +12,7 @@ ASMagicProjectile::ASMagicProjectile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	Damage = -20.0f;
+	Damage = 20.0f;
 
 	
 	FlightSound = CreateDefaultSubobject<UAudioComponent>("FlightSoundComp");
@@ -32,12 +33,17 @@ void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 {
 	if (OtherActor && OtherActor != this->GetInstigator())
 	{
-		USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
-		if (AttributeComp)
+		// USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
+		// if (AttributeComp)
+		// {
+		// 	AttributeComp->ApplyHealthChange(this->GetInstigator(),Damage);
+		// 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound , GetActorLocation(), GetActorRotation());
+		// 	Destroy();
+		// }
+
+		if(USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, Damage, SweepResult))
 		{
-			AttributeComp->ApplyHealthChange(this->GetInstigator(),Damage);
-			UGameplayStatics::PlaySoundAtLocation(this, ImpactSound , GetActorLocation(), GetActorRotation());
-			Destroy();
+			Explode();
 		}
 	}
 }

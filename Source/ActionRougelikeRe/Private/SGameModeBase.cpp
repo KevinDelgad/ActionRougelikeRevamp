@@ -5,9 +5,14 @@
 
 #include "EngineUtils.h"
 #include "SAttributeComponent.h"
+#include "SCharacter.h"
 #include "AI/SAICharacter.h"
 #include "BehaviorTree/Tasks/BTTask_RunEQSQuery.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
+
+static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("su.SpawnBots"), true, TEXT("Enabling spawning of bots Via Timer"), ECVF_Cheat);
+
+
 
 ASGameModeBase::ASGameModeBase()
 {
@@ -19,6 +24,33 @@ void ASGameModeBase::StartPlay()
 	Super::StartPlay();
 
 	GetWorldTimerManager().SetTimer(TimerHandle_SpawnBots, this, &ASGameModeBase::SpawnBotTimerElapsed, SpawnTimerInterval, true);
+}
+
+void ASGameModeBase::RespawnPlayerElapsed(AController* Controller)
+{
+	if ensure(Controller)
+	{
+		Controller->UnPossess();
+
+		//Teleports player to spawn area
+		RestartPlayer(Controller);
+	}
+}
+
+void ASGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
+{
+	ASCharacter* Player = Cast<ASCharacter>(VictimActor);
+
+	if (Player)
+	{
+		FTimerHandle TimerHandle_RespawnDelay;
+		FTimerDelegate Delegate;
+		Delegate.BindUFunction(this, "RespawnPlayerElapsed", Player->GetController());
+
+		float RespawnDelay = 2.0f;
+		GetWorldTimerManager().SetTimer(TimerHandle_RespawnDelay, Delegate, RespawnDelay, false);
+	}
+	UE_LOG(LogTemp, Log, TEXT("OnActorKilled: Victim %s, Killer: %s"), *GetNameSafe(VictimActor), *GetNameSafe(Killer));
 }
 
 void ASGameModeBase::KillAll()
@@ -38,7 +70,11 @@ void ASGameModeBase::KillAll()
 
 void ASGameModeBase::SpawnBotTimerElapsed()
 {
-
+	if(!CVarSpawnBots.GetValueOnGameThread())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Bot Spawning disabled via cvar. 'CVarSpawnBots'. "))
+		return;
+	}
 	//TActor iterator, better version of get all actors of class by getting pointer to all instances
 	//of the target in the world in this case ASAICharacter
 	//Grabs any instance of a particular class in the current level
@@ -78,7 +114,7 @@ void ASGameModeBase::SpawnBotTimerElapsed()
 }
 
 void ASGameModeBase::OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance,
-	EEnvQueryStatus::Type QueryStatus)
+                                      EEnvQueryStatus::Type QueryStatus)
 {
 	// Gives location of where to spawn bot
 
