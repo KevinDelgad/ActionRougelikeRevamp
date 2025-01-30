@@ -7,7 +7,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="957e930a-7654-49c5-9c04-346a509a5a99" name="Changes" comment="" />
+    <list default="true" id="957e930a-7654-49c5-9c04-346a509a5a99" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ActionRougelikeRe.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ActionRougelikeRe.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/ActionRougelike/GamemodeBP.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ActionRougelike/GamemodeBP.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ActionRougelikeRe/Private/SGameModeBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ActionRougelikeRe/Private/SGameModeBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ActionRougelikeRe/Private/SGameplayFunctionLibrary.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ActionRougelikeRe/Private/SGameplayFunctionLibrary.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ActionRougelikeRe/Private/SHealthPotion.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ActionRougelikeRe/Private/SHealthPotion.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ActionRougelikeRe/Public/SGameModeBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ActionRougelikeRe/Public/SGameModeBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ActionRougelikeRe/Public/SGameplayFunctionLibrary.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ActionRougelikeRe/Public/SGameplayFunctionLibrary.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ActionRougelikeRe/Public/SHealthPotion.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ActionRougelikeRe/Public/SHealthPotion.h" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -19,29 +28,43 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 6
-}]]></component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Editor/Kismet/Private/SBlueprintDiff.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/Core/Public/Misc/AsciiSet.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/Engine/Classes/GameFramework/Actor.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/Engine/Classes/GameFramework/Character.h" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="2rMs6CrBo1mDmPZ7TmY2nMzHblf" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "Uproject.ActionRougelikeRe.executor": "Run",
-    "git-widget-placeholder": "main",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Uproject.ActionRougelikeRe.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="ActionRougelikeRe" type="Uproject" factoryName="rider.uproject">
       <configuration_1 setup="1">
@@ -126,6 +149,8 @@
       <option name="presentableId" value="Default" />
       <updated>1736380101731</updated>
       <workItem from="1736380103592" duration="4750000" />
+      <workItem from="1736981580284" duration="9210000" />
+      <workItem from="1738190735381" duration="9798000" />
     </task>
     <servers />
   </component>

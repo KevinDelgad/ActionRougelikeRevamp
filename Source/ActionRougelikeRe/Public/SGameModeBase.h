@@ -32,6 +32,9 @@ class ACTIONROUGELIKERE_API ASGameModeBase : public AGameModeBase
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	float SpawnTimerInterval;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
+	float KillValue;
+	
 	FTimerHandle TimerHandle_SpawnBots;
 	
 	UFUNCTION()

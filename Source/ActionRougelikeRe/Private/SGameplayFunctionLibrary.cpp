@@ -4,6 +4,7 @@
 #include "SGameplayFunctionLibrary.h"
 
 #include "SAttributeComponent.h"
+#include "SPlayerState.h"
 
 bool USGameplayFunctionLibrary::ApplyDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount)
 {
@@ -30,4 +31,18 @@ bool USGameplayFunctionLibrary::ApplyDirectionalDamage(AActor* DamageCauser, AAc
 	}
 
 	return false;
+}
+
+bool USGameplayFunctionLibrary::AddPlayerCredits(AController* TargetController, float CreditAmount)
+{
+	if (ASPlayerState* PlayerState = ASPlayerState::GetAttributes(TargetController))
+	{
+		return PlayerState->UpdateCredits(TargetController, CreditAmount);
+	}
+	return false;
+}
+
+bool USGameplayFunctionLibrary::SubtractPlayerCredits(AController* TargetController, float CreditAmount)
+{
+	return AddPlayerCredits(TargetController, -CreditAmount);
 }

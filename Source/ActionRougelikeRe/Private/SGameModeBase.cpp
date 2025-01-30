@@ -6,6 +6,7 @@
 #include "EngineUtils.h"
 #include "SAttributeComponent.h"
 #include "SCharacter.h"
+#include "SGameplayFunctionLibrary.h"
 #include "AI/SAICharacter.h"
 #include "BehaviorTree/Tasks/BTTask_RunEQSQuery.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
@@ -49,6 +50,12 @@ void ASGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
 
 		float RespawnDelay = 2.0f;
 		GetWorldTimerManager().SetTimer(TimerHandle_RespawnDelay, Delegate, RespawnDelay, false);
+	}
+
+	AController* Controller = Killer->GetInstigatorController();
+	if (Controller)
+	{
+		USGameplayFunctionLibrary::AddPlayerCredits(Controller, 5);
 	}
 	UE_LOG(LogTemp, Log, TEXT("OnActorKilled: Victim %s, Killer: %s"), *GetNameSafe(VictimActor), *GetNameSafe(Killer));
 }

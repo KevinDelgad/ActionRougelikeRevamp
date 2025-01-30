@@ -4,6 +4,7 @@
 #include "SHealthPotion.h"
 
 #include "SAttributeComponent.h"
+#include "SGameplayFunctionLibrary.h"
 
 // Sets default values
 ASHealthPotion::ASHealthPotion()
@@ -11,6 +12,7 @@ ASHealthPotion::ASHealthPotion()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	HealAmount = 50;
+	Cost = 20;
 }
 
 // Called when the game starts or when spawned
@@ -35,10 +37,16 @@ void ASHealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 		USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(InstigatorPawn->GetComponentByClass(USAttributeComponent::StaticClass())) ;
 		if (ensure(AttributeComp) &&  AttributeComp->GetHealth() < AttributeComp->GetMaxHealth())
 		{
-			if (AttributeComp->ApplyHealthChange(this ,HealAmount))
+			AController* Controller = InstigatorPawn->GetController();
+			if (Controller && USGameplayFunctionLibrary::SubtractPlayerCredits(Controller, Cost))
 			{
-			HideAndCooldownPowerup();
+				if (AttributeComp->ApplyHealthChange(this ,HealAmount))
+				{
+					HideAndCooldownPowerup();
+				}
+				
 			}
+			
 		}
 	}
 }

@@ -20,7 +20,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	float HealAmount;
-	
+
+	UPROPERTY(EditDefaultsOnly)
+	float Cost;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
