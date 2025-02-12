@@ -28,6 +28,8 @@ bool ASPlayerState::UpdateCredits(AActor* InstigatorActor, float Delta)
 	}
 
 	UE_LOG(LogTemp, Log, TEXT("Player %s new credit value: %f"), *GetNameSafe(InstigatorActor), NewCredit);
+
+	OnCreditChanged.Broadcast(InstigatorActor, this, NewCredit, Delta);
 	
 	Credits += Delta;
 	return true;

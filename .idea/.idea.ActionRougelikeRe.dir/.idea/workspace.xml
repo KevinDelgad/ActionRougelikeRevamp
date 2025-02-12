@@ -9,13 +9,8 @@
   <component name="ChangeListManager">
     <list default="true" id="957e930a-7654-49c5-9c04-346a509a5a99" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ActionRougelikeRe.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ActionRougelikeRe.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/ActionRougelike/GamemodeBP.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ActionRougelike/GamemodeBP.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ActionRougelikeRe/Private/SGameModeBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ActionRougelikeRe/Private/SGameModeBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ActionRougelikeRe/Private/SGameplayFunctionLibrary.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ActionRougelikeRe/Private/SGameplayFunctionLibrary.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ActionRougelikeRe/Private/SHealthPotion.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ActionRougelikeRe/Private/SHealthPotion.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ActionRougelikeRe/Public/SGameModeBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ActionRougelikeRe/Public/SGameModeBase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ActionRougelikeRe/Public/SGameplayFunctionLibrary.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ActionRougelikeRe/Public/SGameplayFunctionLibrary.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ActionRougelikeRe/Public/SHealthPotion.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ActionRougelikeRe/Public/SHealthPotion.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ActionRougelikeRe.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/ActionRougelikeRe.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/ActionRougelike/UI/Credits_Widget.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ActionRougelike/UI/Credits_Widget.uasset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -151,6 +146,7 @@
       <workItem from="1736380103592" duration="4750000" />
       <workItem from="1736981580284" duration="9210000" />
       <workItem from="1738190735381" duration="9798000" />
+      <workItem from="1738229839548" duration="16000" />
     </task>
     <servers />
   </component>

@@ -6,10 +6,13 @@
 #include "GameFramework/PlayerState.h"
 #include "SPlayerState.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnCreditChanged, AActor*, InstigatorActor ,
+	ASPlayerState*, OwningComp ,float, NewCredit, float, Delta);
+
 /**
  * 
  */
-UCLASS()
+UCLASS(ClassGroup=(Custom))
 class ACTIONROUGELIKERE_API ASPlayerState : public APlayerState
 {
 	GENERATED_BODY()
@@ -22,6 +25,9 @@ class ACTIONROUGELIKERE_API ASPlayerState : public APlayerState
 	public:
 	ASPlayerState();
 
+	UPROPERTY(BlueprintAssignable)
+	FOnCreditChanged OnCreditChanged;
+	
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	static ASPlayerState* GetAttributes(AController* FromController);
 	
