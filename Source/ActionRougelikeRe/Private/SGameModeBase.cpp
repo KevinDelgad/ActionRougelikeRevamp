@@ -38,6 +38,11 @@ void ASGameModeBase::RespawnPlayerElapsed(AController* Controller)
 	}
 }
 
+void ASGameModeBase::InitSpawnConsumables()
+{
+	
+}
+
 void ASGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
 {
 	ASCharacter* Player = Cast<ASCharacter>(VictimActor);

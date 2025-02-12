@@ -35,6 +35,15 @@ class ACTIONROUGELIKERE_API ASGameModeBase : public AGameModeBase
 	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
 	float KillValue;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")	
+	UEnvQuery* SpawnItemQuery;
+
+	UPROPERTY(EditAnywhere, Category = "Consumable")
+	TSubclassOf<AActor> HealthPotion;
+
+	UPROPERTY(EditAnywhere, Category = "Consumable")
+	TSubclassOf<AActor> Coin;
+	
 	FTimerHandle TimerHandle_SpawnBots;
 	
 	UFUNCTION()
@@ -46,6 +55,9 @@ class ACTIONROUGELIKERE_API ASGameModeBase : public AGameModeBase
 	UFUNCTION()
 	void RespawnPlayerElapsed(AController* Controller);
 
+	UFUNCTION()
+	void InitSpawnConsumables();
+	
 	public:
 	ASGameModeBase();
 	
