@@ -42,7 +42,13 @@ class ACTIONROUGELIKERE_API ASGameModeBase : public AGameModeBase
 	TSubclassOf<AActor> HealthPotion;
 
 	UPROPERTY(EditAnywhere, Category = "Consumable")
+	int NumHealthPotions;
+	
+	UPROPERTY(EditAnywhere, Category = "Consumable")
 	TSubclassOf<AActor> Coin;
+
+	UPROPERTY(EditAnywhere, Category = "Consumable")
+	int NumCoins;
 	
 	FTimerHandle TimerHandle_SpawnBots;
 	
@@ -56,7 +62,15 @@ class ACTIONROUGELIKERE_API ASGameModeBase : public AGameModeBase
 	void RespawnPlayerElapsed(AController* Controller);
 
 	UFUNCTION()
-	void InitSpawnConsumables();
+	void CoinSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance,
+									  EEnvQueryStatus::Type QueryStatus);
+
+	UFUNCTION()
+	void PotionSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance,
+									  EEnvQueryStatus::Type QueryStatus);
+	
+	UFUNCTION()
+	void SpawnConsumable(TSubclassOf<AActor> ClassToSpawn, UEnvQueryInstanceBlueprintWrapper* QueryInstance);
 	
 	public:
 	ASGameModeBase();

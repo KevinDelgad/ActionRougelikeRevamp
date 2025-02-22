@@ -18,6 +18,9 @@ static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("su.SpawnBots"), true, TEXT
 ASGameModeBase::ASGameModeBase()
 {
 	SpawnTimerInterval = 2.0f;
+	NumCoins = 6;
+	NumHealthPotions = 6;
+	
 }
 
 void ASGameModeBase::StartPlay()
@@ -25,6 +28,19 @@ void ASGameModeBase::StartPlay()
 	Super::StartPlay();
 
 	GetWorldTimerManager().SetTimer(TimerHandle_SpawnBots, this, &ASGameModeBase::SpawnBotTimerElapsed, SpawnTimerInterval, true);
+
+	for (int curPotions = 0; curPotions <  NumHealthPotions; curPotions++)
+	{
+		UEnvQueryInstanceBlueprintWrapper* QueryInstance = UEnvQueryManager::RunEQSQuery(this, SpawnItemQuery, this,EEnvQueryRunMode::RandomBest5Pct, nullptr);
+		QueryInstance->GetOnQueryFinishedEvent().AddDynamic(this, &ASGameModeBase::PotionSpawnQueryCompleted);
+	}
+	
+	for (int curCoins = 0; curCoins <  NumHealthPotions; curCoins++)
+	{
+		UEnvQueryInstanceBlueprintWrapper* QueryInstance = UEnvQueryManager::RunEQSQuery(this, SpawnItemQuery, this,EEnvQueryRunMode::RandomBest5Pct, nullptr);
+		QueryInstance->GetOnQueryFinishedEvent().AddDynamic(this, &ASGameModeBase::CoinSpawnQueryCompleted);
+	}
+	
 }
 
 void ASGameModeBase::RespawnPlayerElapsed(AController* Controller)
@@ -38,9 +54,41 @@ void ASGameModeBase::RespawnPlayerElapsed(AController* Controller)
 	}
 }
 
-void ASGameModeBase::InitSpawnConsumables()
+void ASGameModeBase::CoinSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance,
+	EEnvQueryStatus::Type QueryStatus)
 {
+	if (QueryStatus != EEnvQueryStatus::Success)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Coin Consumable EQS Query Failed"));
+		return;
+	}
+
+	SpawnConsumable(Coin, QueryInstance);
 	
+}
+
+void ASGameModeBase::PotionSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance,
+                                               EEnvQueryStatus::Type QueryStatus)
+{
+	if (QueryStatus != EEnvQueryStatus::Success)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Potion Consumable EQS Query Failed"));
+		return;
+	}
+
+	SpawnConsumable(HealthPotion, QueryInstance);
+}
+
+void ASGameModeBase::SpawnConsumable(TSubclassOf<AActor> ClassToSpawn, UEnvQueryInstanceBlueprintWrapper* QueryInstance)
+{
+
+	TArray<FVector> Locations = QueryInstance->GetResultsAsLocations();
+
+	if (Locations.IsValidIndex(0))
+	{
+		GetWorld()->SpawnActor<AActor>(ClassToSpawn, Locations[0], FRotator::ZeroRotator);
+		DrawDebugSphere(GetWorld(), Locations[0], 50.0f, 20, FColor::Blue, false, 60.0f);
+	}
 }
 
 void ASGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
