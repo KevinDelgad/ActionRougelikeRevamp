@@ -10,6 +10,7 @@ class USWorldUserWidget;
 class USAttributeComponent;
 class UPawnSensingComponent;
 class UUserWidget;
+class USActionComponent;
 
 UCLASS()
 class ACTIONROUGELIKERE_API ASAICharacter : public ACharacter
@@ -37,12 +38,15 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	USAttributeComponent* AttributeComp;
-
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	USActionComponent* ActionComponent;
+	
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
 	
 	UFUNCTION()
 	void OnPawnSeen(APawn* Pawn);
-
+	
 	virtual void PostInitializeComponents() override;
 };

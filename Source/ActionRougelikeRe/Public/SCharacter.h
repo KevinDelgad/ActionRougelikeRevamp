@@ -13,6 +13,8 @@ class USpringArmComponent;
 class UCameraComponent;
 class UAnimMontage;
 class USAttributeComponent;
+class USActionComponent;
+
 UCLASS()
 class ACTIONROUGELIKERE_API ASCharacter : public ACharacter
 {
@@ -28,37 +30,17 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArm;
-
-	//Allows assigning of a Class
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<AActor> ProjectileClass;
-
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<AActor> BlackHole;
-
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<AActor> Dash;
-	
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	UAnimMontage* AttackAnim;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Attack")
-	UParticleSystem* CastingEmitter;
 	
 	UPROPERTY(VisibleAnywhere)
 	USInteractionComponent* InteractionComp;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	USAttributeComponent* AttributeComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	USActionComponent* ActionComp;
 	
 	void SpawnProjectile(TSubclassOf<AActor> ClassToSpawn);
-	
-	FTimerHandle TimerHandle_PrimaryAttack;
-	FTimerHandle TimerHandle_PrimaryAbility;
-	FTimerHandle TimerHandle_SecondaryAbility;
-
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	float AttackAnimDelay;
 
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
@@ -66,6 +48,8 @@ protected:
 	
 	void MoveForward(float Value);
 	void MoveRight(float Value);
+	void SprintStart();
+	void SprintStop();
 	void PrimaryAttack_TimeElapsed();
 	void PrimaryAttack();
 	void PrimaryAbility_TimeElapsed();
@@ -79,7 +63,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	void AbiltyAnim(FTimerHandle TimerHandle, TDelegate<void()>::TMethodPtr<ASCharacter> Func);
 	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

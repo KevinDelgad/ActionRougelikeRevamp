@@ -29,6 +29,7 @@ void ASGameModeBase::StartPlay()
 
 	GetWorldTimerManager().SetTimer(TimerHandle_SpawnBots, this, &ASGameModeBase::SpawnBotTimerElapsed, SpawnTimerInterval, true);
 
+	//Smarter Approach, only run query once and spawn at locations from array while removing the location
 	for (int curPotions = 0; curPotions <  NumHealthPotions; curPotions++)
 	{
 		UEnvQueryInstanceBlueprintWrapper* QueryInstance = UEnvQueryManager::RunEQSQuery(this, SpawnItemQuery, this,EEnvQueryRunMode::RandomBest5Pct, nullptr);

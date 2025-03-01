@@ -5,6 +5,7 @@
 
 #include "AIController.h"
 #include "BrainComponent.h"
+#include "SActionComponent.h"
 #include "SAttributeComponent.h"
 #include "SWorldUserWidget.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -22,6 +23,8 @@ ASAICharacter::ASAICharacter()
 	
 	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
 
+	ActionComponent = CreateDefaultSubobject<USActionComponent>("ActionComp");
+	
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Ignore);
 	GetMesh()->SetGenerateOverlapEvents(true);
 	TimeToHitParamName = "TimeToHit";
