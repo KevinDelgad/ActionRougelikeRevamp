@@ -18,7 +18,7 @@ class ACTIONROUGELIKERE_API USAction_ProjectileAttack : public USAction
 
 protected:
 	//Allows assigning of a Class
-	UPROPERTY(EditAnywhere, Category = "Attack")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly , Category = "Attack")
 	TSubclassOf<AActor> ProjectileClass;
 
 	UPROPERTY(VisibleAnywhere, Category = "Effects")

@@ -33,6 +33,9 @@ protected:
 public:
 	UFUNCTION(BlueprintCallable, Category="Action")
 	bool IsRunning() const;
+
+	UPROPERTY(EditDefaultsOnly, Category="Action")
+	bool bAutoStart;
 	
 	UFUNCTION(BlueprintNativeEvent, Category="Action")
 	bool CanStart(AActor* Instigator);

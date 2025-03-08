@@ -47,6 +47,17 @@ protected:
 	
 	UFUNCTION()
 	void OnPawnSeen(APawn* Pawn);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="UI")
+	TSubclassOf<class USWorldUserWidget> AlertWidgetClass;
+
+	UPROPERTY()
+	USWorldUserWidget* AlertWidgetInstance;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	float AlertDuration;
+	
+	void ClearWidget();
 	
 	virtual void PostInitializeComponents() override;
 };

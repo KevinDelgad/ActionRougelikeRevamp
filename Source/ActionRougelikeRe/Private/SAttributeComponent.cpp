@@ -11,6 +11,9 @@ USAttributeComponent::USAttributeComponent()
 {
 	Health = 100;
 	HealthMax = 100;
+	Rage = 0;
+	RageConversionRate = 2;
+	RageMax = 100;
 }
 
 
@@ -39,14 +42,20 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor ,float Delt
 	float ActualDelta = Health - OldHealth;
 	OnHealthChanged.Broadcast(InstigatorActor, this, Health, ActualDelta);
 
-	if(ActualDelta < 0.0f && Health == 0.0f)
+	if(ActualDelta < 0.0f)
 	{
-		ASGameModeBase* GM = GetWorld()->GetAuthGameMode<ASGameModeBase>();
-		if (GM)
+		ApplyRageChange(InstigatorActor, abs(ActualDelta));
+		
+		if(Health == 0.0f)
 		{
-			GM->OnActorKilled(GetOwner(), InstigatorActor);
+			ASGameModeBase* GM = GetWorld()->GetAuthGameMode<ASGameModeBase>();
+			if (GM)
+			{
+				GM->OnActorKilled(GetOwner(), InstigatorActor);
+			}
 		}
 	}
+	
 	
 	return ActualDelta != 0;
 }
@@ -57,6 +66,24 @@ bool USAttributeComponent::ApplyMaxHealthChange(float Delta)
 
 	return true;
 }
+
+bool USAttributeComponent::ApplyRageChange(AActor* InstigatorActor, float Delta)
+{
+	UE_LOG(LogTemp, Display, TEXT("Delta = %f"), Delta);
+	
+	float ConvertedRage = Delta * RageConversionRate;
+
+	Rage = FMath::Clamp(Rage + ConvertedRage, 0, RageMax);
+
+	FString DebugMsg = "Current Rage: " + FString::FromInt(Rage);
+
+	OnRageChanged.Broadcast(InstigatorActor, this, Rage, Delta);
+	
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::White, DebugMsg);
+	
+	return true;
+}
+
 
 bool USAttributeComponent::IsAlive() const
 {
