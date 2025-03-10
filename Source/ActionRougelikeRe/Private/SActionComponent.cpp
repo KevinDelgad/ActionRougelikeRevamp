@@ -8,9 +8,13 @@
 // Sets default values for this component's properties
 USActionComponent::USActionComponent()
 {
+	//SetIsReplicatedByDefault() is only to be called during component initialization (eg. in the constructor).
 
-	PrimaryComponentTick.bCanEverTick = true;
+	//SetReplicates() is the opposite and should only be called outside the constructor.
+
 	
+	PrimaryComponentTick.bCanEverTick = true;
+	SetIsReplicatedByDefault(true);
 }
 
 void USActionComponent::BeginPlay()
@@ -64,6 +68,12 @@ bool USActionComponent::StartActionByName(AActor* Instigator, FName ActionName)
 				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FailedMsg);
 				continue;
 			}
+
+			//Is Client?
+			if (!GetOwner()->HasAuthority())
+			{
+				ServerStartAction(Instigator, ActionName);
+			}
 			
 			Action->StartAction(Instigator);
 			return true;
@@ -106,6 +116,11 @@ bool USActionComponent::CheckForAction(FName ActionToFind)
 	}
 
 	return false;
+}
+
+void USActionComponent::ServerStartAction_Implementation(AActor* Instigator, FName ActionName)
+{
+	StartActionByName(Instigator, ActionName);
 }
 
 

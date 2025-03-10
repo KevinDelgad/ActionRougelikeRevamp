@@ -3,6 +3,8 @@
 
 #include "SItemChest.h"
 
+#include "Net/UnrealNetwork.h"
+
 // Sets default values
 ASItemChest::ASItemChest()
 {
@@ -16,13 +18,25 @@ ASItemChest::ASItemChest()
 	LidMesh->SetupAttachment(BaseMesh);
 
 	TargetPitch = 110;
+	bReplicates = true;
 }
 
 void ASItemChest::Interact_Implementation(APawn* InstigatorPawn)
 {
 	//ISGameplayInterface::Interact_Implementation(Instigator);
 	UE_LOG(LogHAL, Log, TEXT("Instigator Pawn: "));
-	LidMesh->SetRelativeRotation(FRotator(TargetPitch, 0, 0));
+	bLidOpen = !bLidOpen;
+
+	//RepNotify or ReplicatedUsing only does automatic call for client (Except for on blueprint)
+	//Manually Called here to ensure it is done on the server
+	OnRep_LidOpened();
+	
+}
+
+void ASItemChest::OnRep_LidOpened()
+{
+	float CurrPitch = bLidOpen ? TargetPitch : 0;
+	LidMesh->SetRelativeRotation(FRotator(CurrPitch, 0, 0));
 }
 
 // Called when the game starts or when spawned
@@ -39,3 +53,11 @@ void ASItemChest::Tick(float DeltaTime)
 
 }
 
+//Returns the properties used for network replication, this needs to be overridden by all actor classes with native replicated properties
+void ASItemChest::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//Whenever bLidOpen Changes send to all clients
+	DOREPLIFETIME(ASItemChest, bLidOpen);
+}

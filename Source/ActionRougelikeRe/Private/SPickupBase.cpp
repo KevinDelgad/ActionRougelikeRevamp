@@ -13,6 +13,8 @@ ASPickupBase::ASPickupBase()
 	RootComponent = MeshComp;
 
 	RechargeTime = 10.0f;
+
+	bReplicates = true;
 }
 
 // Called when the game starts or when spawned

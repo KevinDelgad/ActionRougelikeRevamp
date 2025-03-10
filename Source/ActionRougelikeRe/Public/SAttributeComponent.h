@@ -39,10 +39,10 @@ protected:
 	//--
 	// Category = "" - display only for detail panels and blueprint context menu.
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated, Category="Attributes")
 	float Health;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated, Category="Attributes")
 	float HealthMax;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
@@ -55,6 +55,16 @@ protected:
 	float RageConversionRate;
 	// HealthMax, Stamina, Strength
 
+	//Use Multicast for transient Events (Things happening in the moment but dont change the on going state. EX: Barrel Explosion)
+	//Rep Notifies are useful for state Changes (Ongoing)/
+
+	//@FIXME: Mark as unreliable once we moved the 'state' of our character
+	//When marked as unreliable it takes relevancy into account
+	//Relevancy - How relevate a player is to recieve data? Are they close enough to be considered relevant enough?
+	
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastHealthChanged(AActor* InstigatorActor, float NewHealth, float Delta);
+	
 public:
 
 	UFUNCTION(BlueprintCallable)

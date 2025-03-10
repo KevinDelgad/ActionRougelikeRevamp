@@ -38,6 +38,9 @@ public:
 	FGameplayTagContainer ActiveGameplayTags;
 protected:
 
+	UFUNCTION(Server, Reliable)
+	void ServerStartAction(AActor* Instigator, FName ActionName);
+	
 	//When Dealing with pointers and Memory, Mark with UPROPERTY to tell unreal there is memory here to keep track of
 	UPROPERTY()
 	TArray<USAction*> Actions;
